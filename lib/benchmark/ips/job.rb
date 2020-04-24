@@ -187,10 +187,10 @@ module Benchmark
       end
 
       def load_held_results
-        return unless @held_path && File.exist?(@held_path)
+        return unless @held_path && File.exist?(@held_path) && !(contents = IO.read(@held_path)).empty?
         require "json"
         @held_results = {}
-        JSON.load(IO.read(@held_path)).each do |result|
+        JSON.load(contents).each do |result|
           @held_results[result['item']] = result
           create_report(result['item'], result['measured_us'], result['iter'],
                         create_stats(result['samples']), result['cycles'])
